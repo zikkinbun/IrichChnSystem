@@ -81,17 +81,17 @@ a {
         <div class="login-inputBox">
             <Form ref="form" :model="form" :rules="rule" :label-width="0">
                 <Form-item prop="user">
-                    <Input type="text" size="large" v-model="form.user" placeholder="账号">
+                    <Input type="text" size="large" v-model="form.user" placeholder="User Name">
                     <Icon type="ios-person-outline" slot="prepend"></Icon>
                     </Input>
                 </Form-item>
                 <Form-item prop="password">
-                    <Input type="password" size="large" v-model="form.password" placeholder="密码">
+                    <Input type="password" size="large" v-model="form.password" placeholder="Password">
                     <Icon type="ios-locked-outline" slot="prepend"></Icon>
                     </Input>
                 </Form-item>
                 <Form-item>
-                    <Button type="primary" @click="handleSubmit" long>登录</Button>
+                    <Button type="primary" @click="handleSubmit" long>Login</Button>
                 </Form-item>
             </Form>
         </div>
@@ -119,12 +119,12 @@ export default {
             rule: {
                 user: [{
                     required: true,
-                    message: "请填写用户名",
+                    message: "The user name is required",
                     trigger: "blur"
                 }],
                 password: [{
                     required: true,
-                    message: "请填写密码",
+                    message: "The password is required",
                     trigger: "blur"
                 }]
             }
@@ -147,10 +147,10 @@ export default {
                                 });
                                 break;
                             case -1:
-                                self.$Message.error("此账号不存在，请重新尝试！");
+                                self.$Message.error("The user name is not existing, please try agian");
                                 break;
                             case -7:
-                                self.$Message.error("密码错误，请重新尝试！");
+                                self.$Message.error("The password is not correct, please try agian！");
                                 break;
                             default:
                                 self.$Message.error(data.retmsg);
@@ -158,7 +158,7 @@ export default {
                         }
                     });
                 } else {
-                    self.$Message.error("表单验证失败！");
+                    self.$Message.error("Form validation failed！");
                 }
             });
         }

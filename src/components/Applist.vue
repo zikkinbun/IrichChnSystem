@@ -19,7 +19,7 @@
 <div class="page">
 	<h1 class="pageTitle">APP LIST</h1>
 	<div class="ctrlBox">
-		<Button type="primary" icon="plus" size="large" @click="modalShow(1)">CREATE AN APP</Button>
+		<Button type="primary" icon="plus" size="large" @click="modalShow">CREATE AN APP</Button>
 	</div>
 	<p class="totalTips">Total of <strong>{{total}}</strong> data were found</p>
 	<Table stripe border :columns="columns" :data="data"></Table>
@@ -36,9 +36,21 @@
 			</Form-item>
 			<Form-item label="Category" prop="category">
 				<Select v-model="formItem_1.category" placeholder="select one category">
-                <Option value="beijing">北京市</Option>
-                <Option value="shanghai">上海市</Option>
-                <Option value="shenzhen">深圳市</Option>
+                <Option value="[Game]Role Playing">[Game]Role Playing</Option>
+                <Option value="[Game]Action">[Game]Action</Option>
+                <Option value="[Game]Sports">[Game]Sports</Option>
+				<Option value="[Game]Casino">[Game]Casino</Option>
+				<Option value="[Game]Strategy">[Game]Strategy</Option>
+				<Option value="[Game]Adventure Simulation">[Game]Adventure Simulation</Option>
+				<Option value="[Game]Casual">[Game]Casual</Option>
+				<Option value="[Game]Puzzle">[Game]Puzzle</Option>
+				<Option value="[Application]Multimedia">[Application]Multimedia</Option>
+				<Option value="[Application]System">[Application]System</Option>
+				<Option value="[Application]Utility">[Application]Utility</Option>
+				<Option value="[Application]Communication">[Application]Communication</Option>
+				<Option value="[Application]Security">[Application]Security</Option>
+				<Option value="[Application]Entertainment">[Application]Entertainment</Option>
+				<Option value="[Application]Others">[Application]Others</Option>
             </Select>
 			</Form-item>
 			<Form-item label="URL Address" prop="url">
@@ -55,13 +67,13 @@
 			</Form-item>
 		</Form>
 	</Modal>
-	<Modal v-model="modal_2" :loading="modalLoading_2" title="Server to server callbacks" width="40" ok-text="Save" @on-ok="save" @on-cancel="cancel('setCallbackForm')">
+	<Modal v-model="modal_2" :loading="modalLoading_2" title="Server to server callbacks" width="40" :ok-text="formItem_2.isSet ? 'Ok' : 'Save'" @on-ok="save" @on-cancel="cancel('setCallbackForm')">
 		<Form ref="setCallbackForm" :model="formItem_2" :rules="ruleValidate_2" label-position="top">
 			<Form-item label="Callback URL" prop="callback_url">
-				<Input v-model="formItem_2.callback_url"></Input>
+				<Input v-model="formItem_2.callback_url" :disabled="formItem_2.isSet"></Input>
 			</Form-item>
-			<Form-item class="token" label="Callback Token" prop="AppSign">
-				<Input v-model="formItem_2.AppSign" disabled></Input>
+			<Form-item class="token" label="Callback Token" prop="callback_token">
+				<Input v-model="formItem_2.callback_token" disabled></Input>
 			</Form-item>
 		</Form>
 	</Modal>
@@ -142,9 +154,8 @@ export default {
 							},
 							on: {
 								click: () => {
-									this.modalShow(2);
+									this.tokenModalShow(params.row.app_id);
 									this.app_id = params.row.app_id;
-									console.log(this.app_id);
 								}
 							}
 						}, 'Settings')
@@ -193,8 +204,9 @@ export default {
 			modalLoading_2: true,
 			app_id: null,
 			formItem_2: {
+				isSet: false,
 				callback_url: '',
-				AppSign: 'imk6rqfyz6c00000'
+				callback_token: ''
 			},
 			ruleValidate_2: {
 				callback_url: [{
@@ -245,8 +257,32 @@ export default {
 			this.page_size = res;
 			this.loadData();
 		},
-		modalShow(target) {
-			this['modal_' + target] = true;
+		modalShow() {
+			this['modal_1'] = true;
+		},
+		tokenModalShow(id) {
+			let self = this;
+			this.$http.post("/Interface/getTokenUrl", {
+				app_id: id
+			}).then(function(res) {
+				var data = res.data;
+				switch (data.retcode) {
+					case 0:
+						let retdata = data.retdata;
+						if (retdata.callback_token == null && retdata.callback_url == null) {
+							self.formItem_2.isSet = false;
+						} else {
+							self.formItem_2.callback_token = retdata.callback_token;
+							self.formItem_2.callback_url = retdata.callback_url;
+							self.formItem_2.isSet = true;
+						}
+						this['modal_2'] = true;
+						break;
+					default:
+						self.$Message.error(data.retmsg);
+						this.modalLoading_1 = false;
+				}
+			});
 		},
 		submit() {
 			let self = this;
@@ -288,26 +324,32 @@ export default {
 		},
 		save() {
 			let self = this;
-			this.$refs['setCallbackForm'].validate((valid) => {
-				if (valid) {
-					this.$http.post("/Interface/setAppCallBack", {
-						app_id: self.app_id,
-						callback_url: self.formItem_2.callback_url
-					}).then(function(res) {
-						var data = res.data;
-						switch (data.retcode) {
-							case 0:
-								console.log(data);
-								break;
-							default:
-								self.$Message.error(data.retmsg);
-								this.modalLoading_2 = false;
-						}
-					});
-				} else {
-					this.modalLoading_2 = false;
-				}
-			})
+			if (this.formItem_2.isSet) {
+				this.modalLoading_2 = false;
+				this.modal_2 = false;
+				this.$refs['setCallbackForm'].resetFields();
+			} else {
+				this.$refs['setCallbackForm'].validate((valid) => {
+					if (valid) {
+						this.$http.post("/Interface/setAppCallBack", {
+							app_id: self.app_id,
+							callback_url: self.formItem_2.callback_url
+						}).then(function(res) {
+							var data = res.data;
+							switch (data.retcode) {
+								case 0:
+									console.log(data);
+									break;
+								default:
+									self.$Message.error(data.retmsg);
+									this.modalLoading_2 = false;
+							}
+						});
+					} else {
+						this.modalLoading_2 = false;
+					}
+				})
+			}
 		}
 	},
 	mounted() {

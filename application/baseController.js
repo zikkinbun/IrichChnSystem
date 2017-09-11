@@ -35,7 +35,6 @@ Controller.prototype.request = function(req, url, data = null, type = "POST") {
 		}
 	}).then(result => {
 		result = JSON.parse(result.body);
-		console.log(result);
 		if (result.retcode === 0) {
 			return result.retdata;
 		} else {

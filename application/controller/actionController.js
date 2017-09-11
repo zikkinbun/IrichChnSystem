@@ -81,4 +81,30 @@ ctrl.setAppCallBack = function(req) {
 	});
 };
 
+// 获取当前APP的Token和callback_url
+ctrl.getTokenUrl = function(req) {
+	this.validEmpty(["app_id"]);
+	return this.request(req, "/v1/app/getTokenUrl", {
+		chn_id: req.session.user.chn_id,
+		app_id: req.body.app_id
+	}).then(result => {
+		return {
+			data: result,
+			str: "获取当前APP的Token和callback_url"
+		};
+	});
+};
+
+// 统计下游的收入
+ctrl.getChnAppIncome = function(req) {
+	return this.request(req, "/v1/count/getChnAppIncome", {
+		chn_id: req.session.user.chn_id
+	}).then(result => {
+		return {
+			data: result,
+			str: "统计下游的收入"
+		};
+	});
+};
+
 module.exports = new BaseController(ctrl);

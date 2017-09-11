@@ -8,7 +8,6 @@ const express = require("express"),
 	log = require("../global/log"),
 	code = require("../global/code"),
 	action = require("../application/controller/actionController.js"),
-	info = require("../application/controller/infoController.js"),
 	http = require("../global/http");
 
 router.all("/*", [(req, res, next) => {
@@ -59,10 +58,6 @@ for (let temp in action) {
 		default:
 			router.post("/" + temp, action[temp]);
 	}
-}
-
-for (let temp in info) {
-	router.post("/" + temp, info[temp]);
 }
 
 module.exports = router;

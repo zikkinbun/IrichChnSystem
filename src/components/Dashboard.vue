@@ -127,7 +127,7 @@
                         <Icon type="clipboard" :size="iconSize"></Icon>
                         Report
                     </template>
-                    <Menu-item name="1-1">Revenue Report</Menu-item>
+                    <Menu-item name="appreport">Apps Report</Menu-item>
 				</Submenu>
                 <Submenu name="product">
 					<template slot="title">
@@ -143,7 +143,7 @@
 			<div class="layout-header">
 				<div class="welcome">
 					<span v-if="userName">{{userName}}，</span>
-					<span>Welcome to Irich Mobi System！</span>
+					<span>Welcome to Irich Mobi！</span>
 					<span style="padding-left: 10px;">
                       <Button type="ghost" icon="log-out" size="small" @click="logout">Log Out</Button>
                     </span>

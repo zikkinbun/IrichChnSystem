@@ -3,8 +3,8 @@ import Router from "vue-router";
 //	路由与对应的组件文件
 import Login from "@/components/Login";
 import Dashboard from "@/components/Dashboard";
-import Chnlist from "@/components/Chnlist";
 import Applist from "@/components/Applist";
+import Appreport from "@/components/Appreport";
 
 
 const router = new Router({
@@ -19,15 +19,15 @@ const router = new Router({
 		children: [{
 			path: "",
 			name: "dashboard",
-			component: Chnlist
-		}, {
-			path: "chnlist",
-			name: "chnlist",
-			component: Chnlist
+			component: Appreport
 		}, {
 			path: "applist",
 			name: "applist",
 			component: Applist
+		}, {
+			path: "appreport",
+			name: "appreport",
+			component: Appreport
 		}]
 	}]
 });
