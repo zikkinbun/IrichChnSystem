@@ -289,22 +289,22 @@ export default {
 			this.$refs['createAppForm'].validate((valid) => {
 				if (valid) {
 					let urlArr = [];
-					urlArr.push(self.formItem.url);
+					urlArr.push(self.formItem_1.url);
 
 					let param = {
-						app_name: self.formItem.app_name,
-						pkg_name: self.formItem.pkg_name,
-						category: self.formItem.category,
-						platform: self.formItem.platform,
+						app_name: self.formItem_1.app_name,
+						pkg_name: self.formItem_1.pkg_name,
+						category: self.formItem_1.category,
+						platform: self.formItem_1.platform,
 						url: urlArr,
-						description: self.formItem.description
+						description: self.formItem_1.description
 					};
 					this.$http.post("/Interface/createApp", param).then(function(res) {
 						var data = res.data;
 						switch (data.retcode) {
 							case 0:
 								self.modal = false;
-								self.$Message.success('The app(' + self.formItem.app_name + ') was created successfully!');
+								self.$Message.success('The app(' + self.formItem_1.app_name + ') was created successfully!');
 								setTimeout(function() {
 									window.location.reload();
 								}, 1500);
