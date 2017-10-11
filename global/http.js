@@ -119,8 +119,8 @@ exports.request = ({
 	}
 
 	headers["User-Agent"] = "javascript";
-	headers["X-XSRFToken"] = "2|0949e95b|4d12312c8cfc8fb9351ee716f65940ed|1506075890"
-	headers["tag"] = "IrichSystem"
+	headers["X-XSRFToken"] = "2|6f0bb069|d3775fe5eae6e6cf3fee3a98233766a4|1507605643"
+	headers["tag"] = "IrichChnSystem"
 
 	options = {
 		hostname: url.hostname,
